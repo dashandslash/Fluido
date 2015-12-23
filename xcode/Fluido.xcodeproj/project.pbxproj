@@ -17,10 +17,19 @@
 		00B9955A1B128DF400A5C623 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B995581B128DF400A5C623 /* IOKit.framework */; };
 		00B9955B1B128DF400A5C623 /* IOSurface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B995591B128DF400A5C623 /* IOSurface.framework */; };
 		5323E6B20EAFCA74003A9687 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B10EAFCA74003A9687 /* CoreVideo.framework */; };
-		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
-		14B15685AE4B4340A1A750CE /* Fluido_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = D76DDACE37F842E184A0C44C /* Fluido_Prefix.pch */; };
 		5708B1D7E1F5446483E97B5B /* CinderApp.icns in Resources */ = {isa = PBXBuildFile; fileRef = 0310DBEFCDB04F129AAA314B /* CinderApp.icns */; };
-		076AC6EBBB2E4DA4AA5DCAD0 /* Resources.h in Headers */ = {isa = PBXBuildFile; fileRef = DD6F7FEDC58C4107A0F01229 /* Resources.h */; };
+		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+		BF1A68A21C2239990059E7D3 /* gpGpuFrameBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BF1A68A01C2239990059E7D3 /* gpGpuFrameBuffer.cpp */; };
+		BF1A68A81C2239E10059E7D3 /* advect.frag in Resources */ = {isa = PBXBuildFile; fileRef = BF1A68A41C2239E10059E7D3 /* advect.frag */; };
+		BF1A68A91C2239E10059E7D3 /* jacobi.frag in Resources */ = {isa = PBXBuildFile; fileRef = BF1A68A51C2239E10059E7D3 /* jacobi.frag */; };
+		BF1A68AA1C2239E10059E7D3 /* passThru.vert in Resources */ = {isa = PBXBuildFile; fileRef = BF1A68A61C2239E10059E7D3 /* passThru.vert */; };
+		BF1A68AB1C2239E10059E7D3 /* subtractGradient.frag in Resources */ = {isa = PBXBuildFile; fileRef = BF1A68A71C2239E10059E7D3 /* subtractGradient.frag */; };
+		BF7528011C23F68500BB40B5 /* buoyancy.frag in Resources */ = {isa = PBXBuildFile; fileRef = BF7528001C23F68500BB40B5 /* buoyancy.frag */; };
+		BF7528031C23FD5800BB40B5 /* divergence.frag in Resources */ = {isa = PBXBuildFile; fileRef = BF7528021C23FD5800BB40B5 /* divergence.frag */; };
+		BF7528051C2453E300BB40B5 /* impulse.frag in Resources */ = {isa = PBXBuildFile; fileRef = BF7528041C2453E300BB40B5 /* impulse.frag */; };
+		BF7528071C246E0B00BB40B5 /* visualize.frag in Resources */ = {isa = PBXBuildFile; fileRef = BF7528061C246E0B00BB40B5 /* visualize.frag */; };
+		BF7528091C25A5F200BB40B5 /* visualizeVelocity.frag in Resources */ = {isa = PBXBuildFile; fileRef = BF7528081C25A5F200BB40B5 /* visualizeVelocity.frag */; };
+		BF75280E1C27FB5600BB40B5 /* Fluido.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BF75280D1C27FB5600BB40B5 /* Fluido.cpp */; };
 		E522DB6331C142CBB07D0A0E /* FluidoApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05911502F083474FA2B5F481 /* FluidoApp.cpp */; };
 /* End PBXBuildFile section */
 
@@ -34,16 +43,29 @@
 		00B784B20FF439BC000DE1D7 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
 		00B995581B128DF400A5C623 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		00B995591B128DF400A5C623 /* IOSurface.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOSurface.framework; path = System/Library/Frameworks/IOSurface.framework; sourceTree = SDKROOT; };
+		0310DBEFCDB04F129AAA314B /* CinderApp.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = CinderApp.icns; path = ../resources/CinderApp.icns; sourceTree = "<group>"; };
+		05911502F083474FA2B5F481 /* FluidoApp.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = FluidoApp.cpp; path = ../src/FluidoApp.cpp; sourceTree = "<group>"; };
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		5323E6B10EAFCA74003A9687 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = /System/Library/Frameworks/CoreVideo.framework; sourceTree = "<absolute>"; };
 		8D1107320486CEB800E47090 /* Fluido.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Fluido.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		05911502F083474FA2B5F481 /* FluidoApp.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; path = ../src/FluidoApp.cpp; sourceTree = "<group>"; name = FluidoApp.cpp; };
-		DD6F7FEDC58C4107A0F01229 /* Resources.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ../include/Resources.h; sourceTree = "<group>"; name = Resources.h; };
-		0310DBEFCDB04F129AAA314B /* CinderApp.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = ../resources/CinderApp.icns; sourceTree = "<group>"; name = CinderApp.icns; };
-		D06F59C75CC34452A672243A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; name = Info.plist; };
-		D76DDACE37F842E184A0C44C /* Fluido_Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; path = Fluido_Prefix.pch; sourceTree = "<group>"; name = Fluido_Prefix.pch; };
+		BF1A68A01C2239990059E7D3 /* gpGpuFrameBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gpGpuFrameBuffer.cpp; sourceTree = "<group>"; };
+		BF1A68A11C2239990059E7D3 /* gpGpuFrameBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gpGpuFrameBuffer.h; sourceTree = "<group>"; };
+		BF1A68A41C2239E10059E7D3 /* advect.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = advect.frag; sourceTree = "<group>"; };
+		BF1A68A51C2239E10059E7D3 /* jacobi.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = jacobi.frag; sourceTree = "<group>"; };
+		BF1A68A61C2239E10059E7D3 /* passThru.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = passThru.vert; sourceTree = "<group>"; };
+		BF1A68A71C2239E10059E7D3 /* subtractGradient.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = subtractGradient.frag; sourceTree = "<group>"; };
+		BF7528001C23F68500BB40B5 /* buoyancy.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = buoyancy.frag; sourceTree = "<group>"; };
+		BF7528021C23FD5800BB40B5 /* divergence.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = divergence.frag; sourceTree = "<group>"; };
+		BF7528041C2453E300BB40B5 /* impulse.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = impulse.frag; sourceTree = "<group>"; };
+		BF7528061C246E0B00BB40B5 /* visualize.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = visualize.frag; sourceTree = "<group>"; };
+		BF7528081C25A5F200BB40B5 /* visualizeVelocity.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = visualizeVelocity.frag; sourceTree = "<group>"; };
+		BF75280C1C27FB3500BB40B5 /* Fluido.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Fluido.h; sourceTree = "<group>"; };
+		BF75280D1C27FB5600BB40B5 /* Fluido.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Fluido.cpp; sourceTree = "<group>"; };
+		D06F59C75CC34452A672243A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D76DDACE37F842E184A0C44C /* Fluido_Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; path = Fluido_Prefix.pch; sourceTree = "<group>"; };
+		DD6F7FEDC58C4107A0F01229 /* Resources.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Resources.h; path = ../include/Resources.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,9 +90,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		01B97315FEAEA392516A2CEA /* Blocks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Blocks;
+			sourceTree = "<group>";
+		};
 		080E96DDFE201D6D7F000001 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				BF75280B1C27FB3500BB40B5 /* Fluido */,
+				BF1A689F1C2239990059E7D3 /* gpgpuFrameBuffer */,
 				05911502F083474FA2B5F481 /* FluidoApp.cpp */,
 			);
 			name = Source;
@@ -114,6 +145,7 @@
 		29B97314FDCFA39411CA2CEA /* Fluido */ = {
 			isa = PBXGroup;
 			children = (
+				BF1A68A31C2239E10059E7D3 /* assets */,
 				01B97315FEAEA392516A2CEA /* Blocks */,
 				29B97315FDCFA39411CA2CEA /* Headers */,
 				080E96DDFE201D6D7F000001 /* Source */,
@@ -122,13 +154,6 @@
 				19C28FACFE9D520D11CA2CBB /* Products */,
 			);
 			name = Fluido;
-			sourceTree = "<group>";
-		};
-		01B97315FEAEA392516A2CEA /* Blocks */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Blocks;
 			sourceTree = "<group>";
 		};
 		29B97315FDCFA39411CA2CEA /* Headers */ = {
@@ -158,6 +183,44 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		BF1A689F1C2239990059E7D3 /* gpgpuFrameBuffer */ = {
+			isa = PBXGroup;
+			children = (
+				BF1A68A01C2239990059E7D3 /* gpGpuFrameBuffer.cpp */,
+				BF1A68A11C2239990059E7D3 /* gpGpuFrameBuffer.h */,
+			);
+			name = gpgpuFrameBuffer;
+			path = ../src/gpgpuFrameBuffer;
+			sourceTree = "<group>";
+		};
+		BF1A68A31C2239E10059E7D3 /* assets */ = {
+			isa = PBXGroup;
+			children = (
+				BF1A68A41C2239E10059E7D3 /* advect.frag */,
+				BF7528061C246E0B00BB40B5 /* visualize.frag */,
+				BF7528081C25A5F200BB40B5 /* visualizeVelocity.frag */,
+				BF7528041C2453E300BB40B5 /* impulse.frag */,
+				BF7528021C23FD5800BB40B5 /* divergence.frag */,
+				BF7528001C23F68500BB40B5 /* buoyancy.frag */,
+				BF1A68A51C2239E10059E7D3 /* jacobi.frag */,
+				BF1A68A61C2239E10059E7D3 /* passThru.vert */,
+				BF1A68A71C2239E10059E7D3 /* subtractGradient.frag */,
+			);
+			name = assets;
+			path = ../assets;
+			sourceTree = "<group>";
+			usesTabs = 0;
+		};
+		BF75280B1C27FB3500BB40B5 /* Fluido */ = {
+			isa = PBXGroup;
+			children = (
+				BF75280C1C27FB3500BB40B5 /* Fluido.h */,
+				BF75280D1C27FB5600BB40B5 /* Fluido.cpp */,
+			);
+			name = Fluido;
+			path = ../src/Fluido;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -184,6 +247,8 @@
 /* Begin PBXProject section */
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Fluido" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
@@ -208,7 +273,16 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BF7528071C246E0B00BB40B5 /* visualize.frag in Resources */,
+				BF7528051C2453E300BB40B5 /* impulse.frag in Resources */,
+				BF1A68A81C2239E10059E7D3 /* advect.frag in Resources */,
+				BF1A68A91C2239E10059E7D3 /* jacobi.frag in Resources */,
+				BF1A68AB1C2239E10059E7D3 /* subtractGradient.frag in Resources */,
+				BF1A68AA1C2239E10059E7D3 /* passThru.vert in Resources */,
+				BF7528031C23FD5800BB40B5 /* divergence.frag in Resources */,
+				BF7528091C25A5F200BB40B5 /* visualizeVelocity.frag in Resources */,
 				5708B1D7E1F5446483E97B5B /* CinderApp.icns in Resources */,
+				BF7528011C23F68500BB40B5 /* buoyancy.frag in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -220,6 +294,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				E522DB6331C142CBB07D0A0E /* FluidoApp.cpp in Sources */,
+				BF1A68A21C2239990059E7D3 /* gpGpuFrameBuffer.cpp in Sources */,
+				BF75280E1C27FB5600BB40B5 /* Fluido.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -230,17 +306,17 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
-				DEAD_CODE_STRIPPING = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Fluido_Prefix.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Fluido_Prefix.pch;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
@@ -262,12 +338,12 @@
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
 				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Fluido_Prefix.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"NDEBUG=1",
 					"$(inherited)",
 				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Fluido_Prefix.pch;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
@@ -284,7 +360,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CINDER_PATH = "../../..";
+				CINDER_PATH = ../../..;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++11";
 				CLANG_CXX_LIBRARY = "libc++";
 				ENABLE_TESTABILITY = YES;
@@ -302,7 +378,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CINDER_PATH = "../../..";
+				CINDER_PATH = ../../..;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++11";
 				CLANG_CXX_LIBRARY = "libc++";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
