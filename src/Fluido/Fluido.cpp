@@ -39,6 +39,16 @@ namespace ds {
     
     Fluido::~Fluido()
     {
+        
+        mParamRef->removeParam("dissipation");
+        mParamRef->removeParam("timeStep");
+        mParamRef->removeParam("Sigma");
+        mParamRef->removeParam("Kappa");
+        mParamRef->removeParam("Ambient Temp");
+        mParamRef->removeParam("InversBeta");
+        mParamRef->removeParam("Cell Size");
+        mParamRef->removeParam("Num Jacobi Iterations");
+        
         mImpulsePoints->cancel();
     }
     
@@ -127,14 +137,16 @@ namespace ds {
     
     void Fluido::registerParams(const params::InterfaceGlRef &params)
     {
-        params->addParam("dissipation", &mDissipation);
-        params->addParam("timeStep", &mTimeStep);
-        params->addParam("Sigma", &mSigma);
-        params->addParam("Kappa", &mKappa);
-        params->addParam("Ambient Temp", &mAmbientTemp);
-        params->addParam("InversBeta", &mInversBeta, "step=0.001 min=0.0");
-        params->addParam("Cell Size", &mCellSize, "step=0.001 min=0.0");
-        params->addParam("Num Jacobi Iterations", &mNumIterations, "step=1 min=0 max=300");
+        mParamRef = params;
+        
+        mParamRef->addParam("dissipation", &mDissipation);
+        mParamRef->addParam("timeStep", &mTimeStep);
+        mParamRef->addParam("Sigma", &mSigma);
+        mParamRef->addParam("Kappa", &mKappa);
+        mParamRef->addParam("Ambient Temp", &mAmbientTemp);
+        mParamRef->addParam("InversBeta", &mInversBeta, "step=0.001 min=0.0");
+        mParamRef->addParam("Cell Size", &mCellSize, "step=0.001 min=0.0");
+        mParamRef->addParam("Num Jacobi Iterations", &mNumIterations, "step=1 min=0 max=300");
         
     }
     

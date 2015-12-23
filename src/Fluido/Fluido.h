@@ -131,6 +131,8 @@ namespace ds {
         float               mPrevTime;
         
         ConcurrentCircularBuffer<impulsePoint>	*mImpulsePoints;
+        
+        params::InterfaceGlRef  mParamRef;
     };
 }
 #endif /* Fluido_h */

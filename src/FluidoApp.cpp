@@ -22,6 +22,8 @@ class FluidoApp : public App {
     void mouseUp( MouseEvent event ) override;
     void keyDown( KeyEvent event ) override;
     
+    void init();
+    
 	void update() override;
 	void draw() override;
     
@@ -40,6 +42,8 @@ class FluidoApp : public App {
     ColorA             mColor;
     float              mRadius;
     float              mForce;
+    
+    ivec2               mFluidoSize;
 };
 
 void FluidoApp::setup()
@@ -49,13 +53,31 @@ void FluidoApp::setup()
     mColor.set(CM_RGB, vec4(1.0,1.0,1.0,1.0));
     mForce = 100.0f;
     mRadius = 10.0f;
-    mFluido = Fluido::create(512, 512);
+    mFluidoSize = ivec2(512,512);
+    init();
+    
+}
+
+void FluidoApp::init()
+{
+    mFluido = Fluido::create(mFluidoSize);
     mFluido->resetObstacles(true);
     
     mTex = gl::Texture::create(loadImage(loadAsset("triangle.png")));
     mParams = params::InterfaceGl::create("Fluido", ivec2(200,400));
     
-
+    mParams->addParam("Fluido Width", &mFluidoSize.x, "min=0 step=1");
+    mParams->addParam("Fluido Height", &mFluidoSize.y, "min=0 step=1");
+    
+    mParams->addButton("Apply to fluid", function<void()>([this](){
+        
+//        init();
+                mFluido = Fluido::create(mFluidoSize);
+                mFluido->registerParams(mParams);
+                mFluido->addObstacle(mTex);
+        
+    }));
+    
     mParams->addParam("Impulse Color", &mColor);
     mParams->addParam("Impulse Radius", &mRadius);
     mParams->addParam("Impulse Force", &mForce);
@@ -63,8 +85,8 @@ void FluidoApp::setup()
     
     mTex->setTopDown();
     
-
     mFluido->registerParams(mParams);
+    
     
     mFluido->addObstacle(mTex);
 }
