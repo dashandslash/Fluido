@@ -7,7 +7,7 @@ uniform sampler2D uObstacles;
 uniform float uTimeStep;
 uniform float uDissipation;
 
-uniform vec2 uSize;
+uniform ivec2 ciWindowSize;
 
 in vec2 vTexCoord;
 out vec3 FragColor;
@@ -16,8 +16,7 @@ void main()
 {
     //we need normalized coord
     vec2 st = vTexCoord;
-//    st.x *= uSize.x/uSize.y;
-    //float invSolid = 1.0 - ceil(texture(uObstacles, st).x - 0.5);
+
     if (texture(uObstacles, st).r>0.0) {
         return;
     }

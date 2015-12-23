@@ -1,7 +1,8 @@
 //
 //  gpGpuFrameBuffer.h
-//  dsFluid
-//
+//  
+//  The MIT License (MIT)
+//  Copyright (c) 2015 Luca Lolli.
 //  Created by luca lolli on 16/12/2015.
 //
 //

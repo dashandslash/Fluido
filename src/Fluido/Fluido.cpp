@@ -1,7 +1,8 @@
 //
 //  Fluido.cpp
 //  Fluido
-//
+//  The MIT License (MIT)
+//  Copyright (c) 2015 Luca Lolli.
 //  Created by luca lolli on 21/12/2015.
 //
 //
@@ -372,7 +373,7 @@ namespace ds {
         gl::ScopedGlslProg shader(visualizeShader);
         visualizeShader->uniform("Sampler", 0);
         visualizeShader->uniform("uColor", Color(CM_HSV, (sin(getElapsedSeconds())+1.0)*0.5,1.0,1.0));
-        
+        visualizeShader->uniform("uScale", vec2(mSize)/size );
         gl::drawSolidRect(Rectf(vec2(0.0),size));
         
     }
@@ -403,10 +404,11 @@ namespace ds {
         gl::ScopedTextureBind tex0(mDensityBuffr->getTexture());
         
         gl::ScopedGlslProg shader(visualizeShader);
-        visualizeShader->uniform("Sampler", 0);
+        visualizeShader->uniform("uTex", 0);
         visualizeShader->uniform("uColor", Color(CM_HSV, (sin(getElapsedSeconds())+1.0)*0.5,1.0,1.0));
+        visualizeShader->uniform("uScale", vec2(mSize)/vec2(bounds.getSize()) );
         
-       gl::drawSolidRect(bounds);
+        gl::drawSolidRect(bounds);
     }
     
     void Fluido::drawVelocity(Rectf bounds)
