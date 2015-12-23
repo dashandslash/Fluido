@@ -106,7 +106,13 @@ void FluidoApp::update()
 
 void FluidoApp::keyDown(KeyEvent event)
 {
-//    mFluido->loadShaders();
+    switch (event.getCode()) {
+        case KeyEvent::KEY_SPACE:
+            mFluido->loadShaders();
+            break;
+        default:
+            break;
+    }
 }
 
 void FluidoApp::draw()
