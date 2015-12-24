@@ -19,8 +19,10 @@ class FluidoApp : public App {
 	void setup() override;
 	void mouseDown( MouseEvent event ) override;
     void mouseDrag( MouseEvent event ) override;
+    void mouseMove( MouseEvent event ) override;
     void mouseUp( MouseEvent event ) override;
     void keyDown( KeyEvent event ) override;
+    void keyUp( KeyEvent event ) override;
     
     void init();
     
@@ -44,24 +46,18 @@ class FluidoApp : public App {
     float              mForce;
     
     ivec2               mFluidoSize;
+    bool                isCtrlDown;
 };
 
 void FluidoApp::setup()
 {
+    isCtrlDown = false;
     mMouseDown = false;
     mMouseDir = vec2(0.0);
     mColor.set(CM_RGB, vec4(1.0,1.0,1.0,1.0));
     mForce = 100.0f;
     mRadius = 10.0f;
     mFluidoSize = ivec2(512,512);
-    init();
-    
-}
-
-void FluidoApp::init()
-{
-    mFluido = Fluido::create(mFluidoSize);
-    mFluido->resetObstacles(true);
     
     mTex = gl::Texture::create(loadImage(loadAsset("triangle.png")));
     mParams = params::InterfaceGl::create("Fluido", ivec2(200,400));
@@ -71,10 +67,7 @@ void FluidoApp::init()
     
     mParams->addButton("Apply to fluid", function<void()>([this](){
         
-//        init();
-                mFluido = Fluido::create(mFluidoSize);
-                mFluido->registerParams(mParams);
-                mFluido->addObstacle(mTex);
+        init();
         
     }));
     
@@ -82,11 +75,18 @@ void FluidoApp::init()
     mParams->addParam("Impulse Radius", &mRadius);
     mParams->addParam("Impulse Force", &mForce);
     
+    init();
+    
+}
+
+void FluidoApp::init()
+{
+    mFluido = Fluido::create(mFluidoSize);
+    mFluido->resetObstacles(true);
     
     mTex->setTopDown();
     
     mFluido->registerParams(mParams);
-    
     
     mFluido->addObstacle(mTex);
 }
@@ -96,6 +96,10 @@ void FluidoApp::mouseDown( MouseEvent event )
     mMouseDir = vec2(0.0);
     mMouseDown = true;
     mMousePos = vec2(event.getPos())/ vec2(getWindowSize());
+    
+    if (isCtrlDown) {
+        mFluido->addConstantImpulsePoint({mMousePos*vec2(mFluido->getSize()),mMouseDir,length(mMouseDir), mColor,mRadius,100.0f });
+    }
 }
 
 void FluidoApp::mouseDrag( MouseEvent event )
@@ -104,6 +108,16 @@ void FluidoApp::mouseDrag( MouseEvent event )
     mMouseDir = vec2( normalizezPos - mMousePos );
     mMouseDir *= mForce;
     mMousePos = normalizezPos;
+    
+}
+
+void FluidoApp::mouseMove( MouseEvent event )
+{
+    const vec2 normalizezPos = vec2(event.getPos())/ vec2(getWindowSize());
+    mMouseDir = vec2( normalizezPos - mMousePos );
+    mMouseDir *= mForce;
+    mMousePos = normalizezPos;
+    
 }
 
 void FluidoApp::mouseUp( MouseEvent event )
@@ -132,6 +146,20 @@ void FluidoApp::keyDown(KeyEvent event)
         case KeyEvent::KEY_SPACE:
             mFluido->loadShaders();
             break;
+        case KeyEvent::KEY_LCTRL:
+            isCtrlDown = true;
+            break;
+        default:
+            break;
+    }
+}
+
+void FluidoApp::keyUp(KeyEvent event)
+{
+    switch (event.getCode()) {
+        case KeyEvent::KEY_LCTRL:
+            isCtrlDown = false;
+            break;
         default:
             break;
     }
@@ -146,6 +174,13 @@ void FluidoApp::draw()
     mFluido->drawDensity(getWindowBounds());
 //    mFluido->drawObstacles(getWindowBounds());
 //    gl::draw(mTex,getWindowBounds());
+    
+    if (isCtrlDown) {
+        gl::color(mColor);
+        gl::drawString("Add Constant Impulse", mMousePos*vec2(getWindowSize()) - vec2(0.0, mRadius+10.0f));
+        gl::drawStrokedCircle(mMousePos*vec2(getWindowSize()), mRadius);
+    }
+    
     gl::drawString("FPS: " + toString(getAverageFps()), vec2(20));
     mParams->draw();
     

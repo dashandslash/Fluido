@@ -4,6 +4,7 @@
 uniform sampler2D uVelocity;
 uniform sampler2D uTemperature;
 uniform sampler2D uDensity;
+uniform vec3 uGravity;
 
 uniform float uAmbientTemperature;
 uniform float uTimeStep;
@@ -27,6 +28,6 @@ void main()
     {
         vec3 density = (texelFetch(uDensity, TC, 0).rgb);
         float D = length(density);
-        FragColor += (uTimeStep * (T - uAmbientTemperature) * uSigma - D * uKappa ) * vec2(-0.40, 0.0);
+        FragColor += (uTimeStep * (T - uAmbientTemperature) * uSigma - D * uKappa ) * vec2(-uGravity.x, uGravity.y);
     }
 }

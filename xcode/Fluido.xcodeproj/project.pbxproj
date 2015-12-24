@@ -20,16 +20,8 @@
 		5708B1D7E1F5446483E97B5B /* CinderApp.icns in Resources */ = {isa = PBXBuildFile; fileRef = 0310DBEFCDB04F129AAA314B /* CinderApp.icns */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		BF1A68A21C2239990059E7D3 /* gpGpuFrameBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BF1A68A01C2239990059E7D3 /* gpGpuFrameBuffer.cpp */; };
-		BF1A68A81C2239E10059E7D3 /* advect.frag in Resources */ = {isa = PBXBuildFile; fileRef = BF1A68A41C2239E10059E7D3 /* advect.frag */; };
-		BF1A68A91C2239E10059E7D3 /* jacobi.frag in Resources */ = {isa = PBXBuildFile; fileRef = BF1A68A51C2239E10059E7D3 /* jacobi.frag */; };
-		BF1A68AA1C2239E10059E7D3 /* passThru.vert in Resources */ = {isa = PBXBuildFile; fileRef = BF1A68A61C2239E10059E7D3 /* passThru.vert */; };
-		BF1A68AB1C2239E10059E7D3 /* subtractGradient.frag in Resources */ = {isa = PBXBuildFile; fileRef = BF1A68A71C2239E10059E7D3 /* subtractGradient.frag */; };
-		BF7528011C23F68500BB40B5 /* buoyancy.frag in Resources */ = {isa = PBXBuildFile; fileRef = BF7528001C23F68500BB40B5 /* buoyancy.frag */; };
-		BF7528031C23FD5800BB40B5 /* divergence.frag in Resources */ = {isa = PBXBuildFile; fileRef = BF7528021C23FD5800BB40B5 /* divergence.frag */; };
-		BF7528051C2453E300BB40B5 /* impulse.frag in Resources */ = {isa = PBXBuildFile; fileRef = BF7528041C2453E300BB40B5 /* impulse.frag */; };
-		BF7528071C246E0B00BB40B5 /* visualize.frag in Resources */ = {isa = PBXBuildFile; fileRef = BF7528061C246E0B00BB40B5 /* visualize.frag */; };
-		BF7528091C25A5F200BB40B5 /* visualizeVelocity.frag in Resources */ = {isa = PBXBuildFile; fileRef = BF7528081C25A5F200BB40B5 /* visualizeVelocity.frag */; };
 		BF75280E1C27FB5600BB40B5 /* Fluido.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BF75280D1C27FB5600BB40B5 /* Fluido.cpp */; };
+		BFD0DFB61C2C1243000337AE /* shaders in Resources */ = {isa = PBXBuildFile; fileRef = BFD0DFB51C2C1243000337AE /* shaders */; };
 		E522DB6331C142CBB07D0A0E /* FluidoApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05911502F083474FA2B5F481 /* FluidoApp.cpp */; };
 /* End PBXBuildFile section */
 
@@ -52,17 +44,9 @@
 		8D1107320486CEB800E47090 /* Fluido.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Fluido.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BF1A68A01C2239990059E7D3 /* gpGpuFrameBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gpGpuFrameBuffer.cpp; sourceTree = "<group>"; };
 		BF1A68A11C2239990059E7D3 /* gpGpuFrameBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gpGpuFrameBuffer.h; sourceTree = "<group>"; };
-		BF1A68A41C2239E10059E7D3 /* advect.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = advect.frag; sourceTree = "<group>"; };
-		BF1A68A51C2239E10059E7D3 /* jacobi.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = jacobi.frag; sourceTree = "<group>"; };
-		BF1A68A61C2239E10059E7D3 /* passThru.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = passThru.vert; sourceTree = "<group>"; };
-		BF1A68A71C2239E10059E7D3 /* subtractGradient.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = subtractGradient.frag; sourceTree = "<group>"; };
-		BF7528001C23F68500BB40B5 /* buoyancy.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = buoyancy.frag; sourceTree = "<group>"; };
-		BF7528021C23FD5800BB40B5 /* divergence.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = divergence.frag; sourceTree = "<group>"; };
-		BF7528041C2453E300BB40B5 /* impulse.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = impulse.frag; sourceTree = "<group>"; };
-		BF7528061C246E0B00BB40B5 /* visualize.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = visualize.frag; sourceTree = "<group>"; };
-		BF7528081C25A5F200BB40B5 /* visualizeVelocity.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = visualizeVelocity.frag; sourceTree = "<group>"; };
 		BF75280C1C27FB3500BB40B5 /* Fluido.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Fluido.h; sourceTree = "<group>"; };
 		BF75280D1C27FB5600BB40B5 /* Fluido.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Fluido.cpp; sourceTree = "<group>"; };
+		BFD0DFB51C2C1243000337AE /* shaders */ = {isa = PBXFileReference; lastKnownFileType = folder; name = shaders; path = ../src/Fluido/shaders; sourceTree = "<group>"; };
 		D06F59C75CC34452A672243A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D76DDACE37F842E184A0C44C /* Fluido_Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; path = Fluido_Prefix.pch; sourceTree = "<group>"; };
 		DD6F7FEDC58C4107A0F01229 /* Resources.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Resources.h; path = ../include/Resources.h; sourceTree = "<group>"; };
@@ -196,15 +180,7 @@
 		BF1A68A31C2239E10059E7D3 /* assets */ = {
 			isa = PBXGroup;
 			children = (
-				BF1A68A41C2239E10059E7D3 /* advect.frag */,
-				BF7528061C246E0B00BB40B5 /* visualize.frag */,
-				BF7528081C25A5F200BB40B5 /* visualizeVelocity.frag */,
-				BF7528041C2453E300BB40B5 /* impulse.frag */,
-				BF7528021C23FD5800BB40B5 /* divergence.frag */,
-				BF7528001C23F68500BB40B5 /* buoyancy.frag */,
-				BF1A68A51C2239E10059E7D3 /* jacobi.frag */,
-				BF1A68A61C2239E10059E7D3 /* passThru.vert */,
-				BF1A68A71C2239E10059E7D3 /* subtractGradient.frag */,
+				BFD0DFB51C2C1243000337AE /* shaders */,
 			);
 			name = assets;
 			path = ../assets;
@@ -273,16 +249,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BF7528071C246E0B00BB40B5 /* visualize.frag in Resources */,
-				BF7528051C2453E300BB40B5 /* impulse.frag in Resources */,
-				BF1A68A81C2239E10059E7D3 /* advect.frag in Resources */,
-				BF1A68A91C2239E10059E7D3 /* jacobi.frag in Resources */,
-				BF1A68AB1C2239E10059E7D3 /* subtractGradient.frag in Resources */,
-				BF1A68AA1C2239E10059E7D3 /* passThru.vert in Resources */,
-				BF7528031C23FD5800BB40B5 /* divergence.frag in Resources */,
-				BF7528091C25A5F200BB40B5 /* visualizeVelocity.frag in Resources */,
 				5708B1D7E1F5446483E97B5B /* CinderApp.icns in Resources */,
-				BF7528011C23F68500BB40B5 /* buoyancy.frag in Resources */,
+				BFD0DFB61C2C1243000337AE /* shaders in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

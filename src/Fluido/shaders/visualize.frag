@@ -1,9 +1,7 @@
 #version 150
 
-
 uniform sampler2D uTex;
 uniform vec3 uColor;
-uniform vec2 uScale;
 
 uniform ivec2 ciWindowSize;
 

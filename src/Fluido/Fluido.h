@@ -55,8 +55,10 @@ namespace ds {
         void registerParams(const params::InterfaceGlRef &params);
         //! Update the simulation, the Default value is the internal dT.
         void update(float deltaT = -1.0f);
-        //! Draw a circle into the Density and Temperature buffer, if magnetude > 0 draw also into the velocity texture with the corresponding direction value.
+        //! Draw a temporary circle into the Density and Temperature buffer, if magnetude > 0 draw also into the velocity texture with the corresponding direction value.
         void addImpulsePoint(impulsePoint point);
+        //! Draw a circle every frame into the Density and Temperature buffer, if magnetude > 0 draw also into the velocity texture with the corresponding direction value.
+        void addConstantImpulsePoint(impulsePoint point);
         
         void addObstacle(const gl::TextureRef &obstacle);
         
@@ -84,7 +86,7 @@ namespace ds {
         
         void Advect(const gpGpuFrameBufferRef &buffer, const gl::TextureRef &velocity, const gl::TextureRef &obstacles, float dissipation, float timeStep);
         
-        void Buoyancy(const gpGpuFrameBufferRef &buffer, const gl::TextureRef &temperature, const gl::TextureRef &density, float AmbientTemperature, float TimeStep, float Kappa, float Sigma);
+        void Buoyancy(const gpGpuFrameBufferRef &buffer, const gl::TextureRef &temperature, const gl::TextureRef &density, float AmbientTemperature, float TimeStep, float Kappa, float Sigma, vec3 gravity = vec3(0.0));
         
         void ComputeDivergence(const gl::FboRef &fbo, const gl::TextureRef &velocity, const gl::TextureRef &obstacles, float cellSize);
         
@@ -131,7 +133,10 @@ namespace ds {
         
         float               mPrevTime;
         
+        vec3                mGravity;
+        
         ConcurrentCircularBuffer<impulsePoint>	*mImpulsePoints;
+        vector<impulsePoint>	mConstantImpulsePoints;
         
         params::InterfaceGlRef  mParamRef;
     };

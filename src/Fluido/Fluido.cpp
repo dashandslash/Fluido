@@ -23,19 +23,28 @@ namespace ds {
     
     Fluido::Fluido(ivec2 size):mSize(size)
     {
+        //ADDING ASSET PATH, I'll keep shaders in the block dir but still loading them by calling loadAsset(...)
+        string file_path = __FILE__;
+        string dir_path = file_path.substr(0, file_path.rfind("/"));
+        dir_path+="/shaders";
+
+        addAssetDirectory(dir_path);
+        
         mPrevTime = getElapsedSeconds();
-        mDissipation = 0.985;
+        mDissipation = 0.995;
         mTimeStep = 1.0;
         mSigma = 0.05f;
         mKappa = 0.05f;
         mAmbientTemp = 0.0f;
-        mInversBeta = 0.25f;
+        mInversBeta = 0.2485f;
         mCellSize = 1.25f;
         mNumIterations = 40;
+        mGravity = vec3(0.0);
         
         initBuffers();
         
         mImpulsePoints = new ConcurrentCircularBuffer<impulsePoint>(100);
+        
     }
     
     Fluido::~Fluido()
@@ -49,6 +58,7 @@ namespace ds {
         mParamRef->removeParam("InversBeta");
         mParamRef->removeParam("Cell Size");
         mParamRef->removeParam("Num Jacobi Iterations");
+        mParamRef->removeParam("Gravity X Y");
         
         mImpulsePoints->cancel();
     }
@@ -99,9 +109,15 @@ namespace ds {
         mImpulsePoints->tryPushFront(point);
     }
     
+    void Fluido::addConstantImpulsePoint(impulsePoint point)
+    {
+        mConstantImpulsePoints.push_back(point);
+    }
+    
     void Fluido::loadShaders()
     {
         try {
+            
             advectShader = gl::GlslProg::GlslProg::create(gl::GlslProg::Format().vertex(loadAsset("passThru.vert"))
                                                           .fragment( loadAsset("advect.frag") ));
             jacobiShader = gl::GlslProg::GlslProg::create(gl::GlslProg::Format().vertex(loadAsset("passThru.vert"))
@@ -145,9 +161,10 @@ namespace ds {
         mParamRef->addParam("Sigma", &mSigma);
         mParamRef->addParam("Kappa", &mKappa);
         mParamRef->addParam("Ambient Temp", &mAmbientTemp);
-        mParamRef->addParam("InversBeta", &mInversBeta, "step=0.001 min=0.0");
+        mParamRef->addParam("InversBeta", &mInversBeta, "step=0.0005 min=0.0");
         mParamRef->addParam("Cell Size", &mCellSize, "step=0.001 min=0.0");
         mParamRef->addParam("Num Jacobi Iterations", &mNumIterations, "step=1 min=0 max=300");
+        mParamRef->addParam("Gravity X Y", &mGravity);
         
     }
     
@@ -175,7 +192,7 @@ namespace ds {
         
         Advect(mDensityBuffr, mVelocityBuffer->getTexture(), mObstaclesFbo->getColorTexture(),mDissipation, mDeltaT);
         
-        Buoyancy(mVelocityBuffer, mTemperatureBuffer->getTexture(), mDensityBuffr->getTexture(), mAmbientTemp, mDeltaT, mKappa, mSigma);
+        Buoyancy(mVelocityBuffer, mTemperatureBuffer->getTexture(), mDensityBuffr->getTexture(), mAmbientTemp, mDeltaT, mKappa, mSigma, mGravity);
         
         while( mImpulsePoints->isNotEmpty()) {
             impulsePoint p;
@@ -183,6 +200,17 @@ namespace ds {
             
             injectImpulse(mTemperatureBuffer->getBuffer(), p.position, p.radius, p.color);
             
+            injectImpulse(mDensityBuffr->getBuffer(), p.position, p.radius, p.color);
+            
+            if (p.magnitude>0.0)
+            {
+                injectImpulse(mVelocityBuffer->getBuffer(), p.position, p.radius, vec4(p.direction,1.0,1.0));
+            }
+        }
+        
+        for (auto p : mConstantImpulsePoints) {
+            
+            injectImpulse(mTemperatureBuffer->getBuffer(), p.position, p.radius, p.color);
             injectImpulse(mDensityBuffr->getBuffer(), p.position, p.radius, p.color);
             
             if (p.magnitude>0.0)
@@ -228,7 +256,7 @@ namespace ds {
         buffer->swap();
     }
     
-    void Fluido::Buoyancy(const gpGpuFrameBufferRef &buffer, const gl::TextureRef &temperature, const gl::TextureRef &density, float ambientTemperature, float timeStep, float kappa, float sigma)
+    void Fluido::Buoyancy(const gpGpuFrameBufferRef &buffer, const gl::TextureRef &temperature, const gl::TextureRef &density, float ambientTemperature, float timeStep, float kappa, float sigma, vec3 gravity)
     {
         
         gl::ScopedFramebuffer   fbo(buffer->getBuffer());
@@ -245,6 +273,7 @@ namespace ds {
         buoyancyShader->uniform("uVelocity", 0);
         buoyancyShader->uniform("uTemperature", 1);
         buoyancyShader->uniform("uDensity", 2);
+        buoyancyShader->uniform("uGravity", gravity);
         
         buoyancyShader->uniform("uKappa", kappa);
         buoyancyShader->uniform("uSigma", sigma);
@@ -372,8 +401,7 @@ namespace ds {
         
         gl::ScopedGlslProg shader(visualizeShader);
         visualizeShader->uniform("Sampler", 0);
-        visualizeShader->uniform("uColor", Color(CM_HSV, (sin(getElapsedSeconds())+1.0)*0.5,1.0,1.0));
-        visualizeShader->uniform("uScale", vec2(mSize)/size );
+
         gl::drawSolidRect(Rectf(vec2(0.0),size));
         
     }
@@ -405,8 +433,6 @@ namespace ds {
         
         gl::ScopedGlslProg shader(visualizeShader);
         visualizeShader->uniform("uTex", 0);
-        visualizeShader->uniform("uColor", Color(CM_HSV, (sin(getElapsedSeconds())+1.0)*0.5,1.0,1.0));
-        visualizeShader->uniform("uScale", vec2(mSize)/vec2(bounds.getSize()) );
         
         gl::drawSolidRect(bounds);
     }

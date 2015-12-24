@@ -9,10 +9,12 @@ out vec4 FragColor;
 void main()
 {
     float d = distance(uPoint, gl_FragCoord.xy);
+    FragColor = vec4(uColor);
     if (d < uRadius) {
-        float a = (uRadius - d) * 0.5;
+        float a = max((uRadius - d) / uRadius, 0.0);
         a = min(a, 1.0);
-        FragColor = vec4(uColor.rgb, a);
+        FragColor += vec4(uColor);
+        FragColor.a = pow(a, 3.0 + 0.1);
     } else {
         FragColor = vec4(0);
     }
