@@ -21,7 +21,6 @@
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		BF1A68A21C2239990059E7D3 /* gpGpuFrameBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BF1A68A01C2239990059E7D3 /* gpGpuFrameBuffer.cpp */; };
 		BF75280E1C27FB5600BB40B5 /* Fluido.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BF75280D1C27FB5600BB40B5 /* Fluido.cpp */; };
-		BFD0DFB61C2C1243000337AE /* shaders in Resources */ = {isa = PBXBuildFile; fileRef = BFD0DFB51C2C1243000337AE /* shaders */; };
 		E522DB6331C142CBB07D0A0E /* FluidoApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05911502F083474FA2B5F481 /* FluidoApp.cpp */; };
 /* End PBXBuildFile section */
 
@@ -46,7 +45,6 @@
 		BF1A68A11C2239990059E7D3 /* gpGpuFrameBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gpGpuFrameBuffer.h; sourceTree = "<group>"; };
 		BF75280C1C27FB3500BB40B5 /* Fluido.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Fluido.h; sourceTree = "<group>"; };
 		BF75280D1C27FB5600BB40B5 /* Fluido.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Fluido.cpp; sourceTree = "<group>"; };
-		BFD0DFB51C2C1243000337AE /* shaders */ = {isa = PBXFileReference; lastKnownFileType = folder; name = shaders; path = ../src/Fluido/shaders; sourceTree = SOURCE_ROOT; };
 		D06F59C75CC34452A672243A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D76DDACE37F842E184A0C44C /* Fluido_Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; path = Fluido_Prefix.pch; sourceTree = "<group>"; };
 		DD6F7FEDC58C4107A0F01229 /* Resources.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Resources.h; path = ../include/Resources.h; sourceTree = "<group>"; };
@@ -180,7 +178,6 @@
 		BF1A68A31C2239E10059E7D3 /* assets */ = {
 			isa = PBXGroup;
 			children = (
-				BFD0DFB51C2C1243000337AE /* shaders */,
 			);
 			name = assets;
 			path = ../assets;
@@ -250,7 +247,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				5708B1D7E1F5446483E97B5B /* CinderApp.icns in Resources */,
-				BFD0DFB61C2C1243000337AE /* shaders in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

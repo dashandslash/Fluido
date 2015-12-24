@@ -23,12 +23,6 @@ namespace ds {
     
     Fluido::Fluido(ivec2 size):mSize(size)
     {
-        //ADDING ASSET PATH, I'll keep shaders in the block dir but still loading them by calling loadAsset(...)
-        string file_path = __FILE__;
-        string dir_path = file_path.substr(0, file_path.rfind("/"));
-        dir_path+="/shaders";
-
-        addAssetDirectory(dir_path);
         
         mPrevTime = getElapsedSeconds();
         mDissipation = 0.995;
@@ -118,22 +112,22 @@ namespace ds {
     {
         try {
             
-            advectShader = gl::GlslProg::GlslProg::create(gl::GlslProg::Format().vertex(loadAsset("passThru.vert"))
-                                                          .fragment( loadAsset("advect.frag") ));
-            jacobiShader = gl::GlslProg::GlslProg::create(gl::GlslProg::Format().vertex(loadAsset("passThru.vert"))
-                                                          .fragment( loadAsset("jacobi.frag") ));
-            buoyancyShader = gl::GlslProg::GlslProg::create(gl::GlslProg::Format().vertex(loadAsset("passThru.vert"))
-                                                            .fragment( loadAsset("buoyancy.frag") ));
-            divergenceShader = gl::GlslProg::GlslProg::create(gl::GlslProg::Format().vertex(loadAsset("passThru.vert"))
-                                                              .fragment( loadAsset("divergence.frag") ));
-            subGradientShader = gl::GlslProg::GlslProg::create(gl::GlslProg::Format().vertex(loadAsset("passThru.vert"))
-                                                               .fragment( loadAsset("subtractGradient.frag") ));
-            impulseShader = gl::GlslProg::GlslProg::create(gl::GlslProg::Format().vertex(loadAsset("passThru.vert"))
-                                                           .fragment( loadAsset("impulse.frag") ));
+            advectShader = gl::GlslProg::GlslProg::create(gl::GlslProg::Format().vertex(loadAsset("Fluido/shaders/passThru.vert"))
+                                                          .fragment( loadAsset("Fluido/shaders/advect.frag") ));
+            jacobiShader = gl::GlslProg::GlslProg::create(gl::GlslProg::Format().vertex(loadAsset("Fluido/shaders/passThru.vert"))
+                                                          .fragment( loadAsset("Fluido/shaders/jacobi.frag") ));
+            buoyancyShader = gl::GlslProg::GlslProg::create(gl::GlslProg::Format().vertex(loadAsset("Fluido/shaders/passThru.vert"))
+                                                            .fragment( loadAsset("Fluido/shaders/buoyancy.frag") ));
+            divergenceShader = gl::GlslProg::GlslProg::create(gl::GlslProg::Format().vertex(loadAsset("Fluido/shaders/passThru.vert"))
+                                                              .fragment( loadAsset("Fluido/shaders/divergence.frag") ));
+            subGradientShader = gl::GlslProg::GlslProg::create(gl::GlslProg::Format().vertex(loadAsset("Fluido/shaders/passThru.vert"))
+                                                               .fragment( loadAsset("Fluido/shaders/subtractGradient.frag") ));
+            impulseShader = gl::GlslProg::GlslProg::create(gl::GlslProg::Format().vertex(loadAsset("Fluido/shaders/passThru.vert"))
+                                                           .fragment( loadAsset("Fluido/shaders/impulse.frag") ));
             
-            visualizeShader = gl::GlslProg::GlslProg::create(gl::GlslProg::Format().vertex(loadAsset("passThru.vert"))
-                                                             .fragment( loadAsset("visualize.frag") ));
-            velVisualizerShader = gl::GlslProg::create(gl::GlslProg::Format().vertex(loadAsset("passThru.vert")).fragment(loadAsset("visualizeVelocity.frag")));
+            visualizeShader = gl::GlslProg::GlslProg::create(gl::GlslProg::Format().vertex(loadAsset("Fluido/shaders/passThru.vert"))
+                                                             .fragment( loadAsset("Fluido/shaders/visualize.frag") ));
+            velVisualizerShader = gl::GlslProg::create(gl::GlslProg::Format().vertex(loadAsset("Fluido/shaders/passThru.vert")).fragment(loadAsset("Fluido/shaders/visualizeVelocity.frag")));
             
         } catch ( gl::GlslProgCompileExc ex ) {
             console() << "GLSL Error: " << ex.what() << endl;
