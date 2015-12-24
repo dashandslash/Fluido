@@ -46,7 +46,7 @@
 		BF1A68A11C2239990059E7D3 /* gpGpuFrameBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gpGpuFrameBuffer.h; sourceTree = "<group>"; };
 		BF75280C1C27FB3500BB40B5 /* Fluido.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Fluido.h; sourceTree = "<group>"; };
 		BF75280D1C27FB5600BB40B5 /* Fluido.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Fluido.cpp; sourceTree = "<group>"; };
-		BFD0DFB51C2C1243000337AE /* shaders */ = {isa = PBXFileReference; lastKnownFileType = folder; name = shaders; path = ../src/Fluido/shaders; sourceTree = "<group>"; };
+		BFD0DFB51C2C1243000337AE /* shaders */ = {isa = PBXFileReference; lastKnownFileType = folder; name = shaders; path = ../src/Fluido/shaders; sourceTree = SOURCE_ROOT; };
 		D06F59C75CC34452A672243A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D76DDACE37F842E184A0C44C /* Fluido_Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; path = Fluido_Prefix.pch; sourceTree = "<group>"; };
 		DD6F7FEDC58C4107A0F01229 /* Resources.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Resources.h; path = ../include/Resources.h; sourceTree = "<group>"; };

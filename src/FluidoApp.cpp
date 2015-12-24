@@ -190,8 +190,9 @@ void FluidoApp::draw()
     
     if (isCtrlDown) {
         gl::color(mColor);
+        const float scaledRadius = mRadius*(float(getWindowSize().x)/float(mFluidoSize.x));
         gl::drawString("Add Constant Impulse", mMousePos*vec2(getWindowSize()) - vec2(0.0, mRadius+10.0f));
-        gl::drawStrokedCircle(mMousePos*vec2(getWindowSize()), mRadius);
+        gl::drawStrokedCircle(mMousePos*vec2(getWindowSize()), scaledRadius);
     }
     
     mParams->draw();
