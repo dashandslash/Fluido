@@ -49,10 +49,15 @@ class FluidoApp : public App {
     bool                isCtrlDown;
     
     string              mFpsString;
+    
+    int                 mDrawingMode;
+    
+    bool                mDrawObstacles;
 };
 
 void FluidoApp::setup()
 {
+    mDrawObstacles = false;
     isCtrlDown = false;
     mMouseDown = false;
     mMouseDir = vec2(0.0);
@@ -83,6 +88,15 @@ void FluidoApp::setup()
     mParams->addParam("Impulse Color", &mColor);
     mParams->addParam("Impulse Radius", &mRadius);
     mParams->addParam("Impulse Force", &mForce);
+    mDrawingMode = 1;
+    std::vector<std::string> mode;
+    mode.push_back( "Velocity as Angle" );
+    mode.push_back( "Density" );
+    mode.push_back( "Temperature" );
+    mode.push_back( "Pressure" );
+    
+    mParams->addParam( "Draw Mode: ", mode, &mDrawingMode );
+    mParams->addParam("Draw Obstacles", &mDrawObstacles);
     
     init();
     
@@ -184,7 +198,30 @@ void FluidoApp::draw()
     gl::viewport(getWindowSize());
     gl::setMatricesWindow(getWindowSize());
     
-    mFluido->drawDensity(getWindowBounds());
+
+    switch (mDrawingMode) {
+        case 0:
+            mFluido->drawVelocity(getWindowBounds());
+            break;
+        case 1:
+            mFluido->drawDensity(getWindowBounds());
+            break;
+        case 2:
+            mFluido->drawTemperature(getWindowBounds());
+            break;
+        case 3:
+            mFluido->drawPressure(getWindowBounds());
+            break;
+        default:
+            break;
+    }
+    if (mDrawObstacles) {
+        
+        mFluido->drawObstacles(getWindowBounds());
+        
+    }
+    
+    
 //    mFluido->drawObstacles(getWindowBounds());
 //    gl::draw(mTex,getWindowBounds());
     

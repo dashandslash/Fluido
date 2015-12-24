@@ -90,7 +90,7 @@ namespace ds {
     void Fluido::resetObstacles(bool isContained)
     {
         gl::ScopedFramebuffer fbo(mObstaclesFbo);
-        gl::clear(ColorA(0.0, 0.0, 0.0, 1.0));
+        gl::clear(ColorA(0.0, 0.0, 0.0, 0.0));
         if (isContained) {
             gl::color(ColorA(1.0,0.0,0.0,1.0));
             gl::drawStrokedRect( Rectf(vec2(0.0), mSize),5.0);
@@ -410,6 +410,22 @@ namespace ds {
         gl::drawSolidRect(Rectf(vec2(0.0),size));
     }
     
+    void Fluido::drawTemperature(vec2 size)
+    {
+        gl::ScopedTextureBind tex0(mTemperatureBuffer->getTexture());
+        gl::ScopedGlslProg shader(visualizeShader);
+        visualizeShader->uniform("Sampler", 0);
+        gl::drawSolidRect(Rectf(vec2(0.0),size));
+    }
+    
+    void Fluido::drawPressure(vec2 size)
+    {
+        gl::ScopedTextureBind tex0(mPressureBuffer->getTexture());
+        gl::ScopedGlslProg shader(visualizeShader);
+        visualizeShader->uniform("Sampler", 0);
+        gl::drawSolidRect(Rectf(vec2(0.0),size));
+    }
+    
     void Fluido::drawObstacles(vec2 size)
     {
         gl::ScopedTextureBind tex0(mVelocityBuffer->getTexture());
@@ -438,6 +454,22 @@ namespace ds {
         gl::ScopedGlslProg shader(velVisualizerShader);
         velVisualizerShader->uniform("Sampler", 0);
         
+        gl::drawSolidRect(bounds);
+    }
+    
+    void Fluido::drawTemperature(Rectf bounds)
+    {
+        gl::ScopedTextureBind tex0(mTemperatureBuffer->getTexture());
+        gl::ScopedGlslProg shader(visualizeShader);
+        visualizeShader->uniform("Sampler", 0);
+        gl::drawSolidRect(bounds);
+    }
+    
+    void Fluido::drawPressure(Rectf bounds)
+    {
+        gl::ScopedTextureBind tex0(mPressureBuffer->getTexture());
+        gl::ScopedGlslProg shader(visualizeShader);
+        visualizeShader->uniform("Sampler", 0);
         gl::drawSolidRect(bounds);
     }
     

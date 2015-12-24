@@ -70,11 +70,19 @@ namespace ds {
         
         void drawObstacles(vec2 size);
         
+        void drawTemperature(vec2 size);
+        
+        void drawPressure(vec2 size);
+        
         void drawVelocity(Rectf bounds);
         
         void drawDensity(Rectf bounds);
         
         void drawObstacles(Rectf bounds);
+        
+        void drawTemperature(Rectf bounds);
+        
+        void drawPressure(Rectf bounds);
         
         ~Fluido();
         
