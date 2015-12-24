@@ -47,6 +47,8 @@ class FluidoApp : public App {
     
     ivec2               mFluidoSize;
     bool                isCtrlDown;
+    
+    string              mFpsString;
 };
 
 void FluidoApp::setup()
@@ -60,7 +62,14 @@ void FluidoApp::setup()
     mFluidoSize = ivec2(512,512);
     
     mTex = gl::Texture::create(loadImage(loadAsset("triangle.png")));
-    mParams = params::InterfaceGl::create("Fluido", ivec2(200,400));
+    mParams = params::InterfaceGl::create("Fluido", ivec2(300,400));
+    
+    mFpsString = toString(getAverageFps());
+    
+    mParams->addParam("FPS: ", &mFpsString);
+    
+    mParams->addText("Hold down LCTRL to add constant impulse");
+    mParams->addSeparator();
     
     mParams->addParam("Fluido Width", &mFluidoSize.x, "min=0 step=1");
     mParams->addParam("Fluido Height", &mFluidoSize.y, "min=0 step=1");
@@ -129,9 +138,13 @@ void FluidoApp::mouseUp( MouseEvent event )
 
 void FluidoApp::update()
 {
+
     float deltaT = (getElapsedSeconds() - mPrevTime);
     mPrevTime = getElapsedSeconds();
     
+    //the delta time is in ms.
+    mFpsString = toString(1.0f/deltaT);
+
     mFluido->update(deltaT);
     
     if (mMouseDown) {
@@ -181,7 +194,6 @@ void FluidoApp::draw()
         gl::drawStrokedCircle(mMousePos*vec2(getWindowSize()), mRadius);
     }
     
-    gl::drawString("FPS: " + toString(getAverageFps()), vec2(20));
     mParams->draw();
     
 }
