@@ -121,7 +121,8 @@ void FluidoApp::mouseDown( MouseEvent event )
     mMousePos = vec2(event.getPos())/ vec2(getWindowSize());
     
     if (isCtrlDown) {
-        mFluido->addConstantImpulsePoint({mMousePos*vec2(mFluido->getSize()),mMouseDir,length(mMouseDir), mColor,mRadius,100.0f });
+        //Mouse Position has to be normalized from 0 to 1
+        mFluido->addConstantImpulsePoint({mMousePos,mMouseDir,length(mMouseDir), mColor,mRadius,100.0f });
     }
 }
 
@@ -162,7 +163,8 @@ void FluidoApp::update()
     mFluido->update(deltaT);
     
     if (mMouseDown) {
-        impulsePoint p {mMousePos*vec2(mFluido->getSize()),mMouseDir,length(mMouseDir), mColor,mRadius,100.0f };
+        //Mouse Position has to be normalized from 0 to 1
+        impulsePoint p {mMousePos,mMouseDir,length(mMouseDir), mColor,mRadius,100.0f };
         mFluido->addImpulsePoint(p);
     }
 }
@@ -194,7 +196,7 @@ void FluidoApp::keyUp(KeyEvent event)
 
 void FluidoApp::draw()
 {
-    gl::clear();
+    gl::clear(ColorA(0.0,0.0,0.0,0.0));
     gl::viewport(getWindowSize());
     gl::setMatricesWindow(getWindowSize());
     

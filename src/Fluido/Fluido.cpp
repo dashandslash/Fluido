@@ -362,7 +362,7 @@ namespace ds {
         
         gl::ScopedGlslProg prog(impulseShader);
         
-        impulseShader->uniform("uPoint", position);
+        impulseShader->uniform("uPoint", position*vec2(mSize));
         impulseShader->uniform("uRadius", radius);
         impulseShader->uniform("uColor", color);
         
@@ -381,10 +381,8 @@ namespace ds {
     {
         gl::ScopedBlendAdditive blendAdd;
         gl::ScopedFramebuffer fbo(mObstaclesFbo);
-        
         gl::ScopedViewport viewport(mObstaclesFbo->getSize());
         gl::setMatricesWindow(mObstaclesFbo->getSize());
-        
         gl::color(1.0,1.0,1.0,1.0);
         gl::draw(obstacle, mObstaclesFbo->getBounds());
     }
@@ -392,21 +390,16 @@ namespace ds {
     void Fluido::drawDensity(vec2 size)
     {
         gl::ScopedTextureBind tex0(mDensityBuffr->getTexture());
-        
         gl::ScopedGlslProg shader(visualizeShader);
-        visualizeShader->uniform("Sampler", 0);
-
+        visualizeShader->uniform("uTex", 0);
         gl::drawSolidRect(Rectf(vec2(0.0),size));
-        
     }
     
     void Fluido::drawVelocity(vec2 size)
     {
         gl::ScopedTextureBind tex0(mVelocityBuffer->getTexture());
-        
         gl::ScopedGlslProg shader(velVisualizerShader);
-        velVisualizerShader->uniform("Sampler", 0);
-        
+        velVisualizerShader->uniform("uTex", 0);
         gl::drawSolidRect(Rectf(vec2(0.0),size));
     }
     
@@ -414,7 +407,7 @@ namespace ds {
     {
         gl::ScopedTextureBind tex0(mTemperatureBuffer->getTexture());
         gl::ScopedGlslProg shader(visualizeShader);
-        visualizeShader->uniform("Sampler", 0);
+        visualizeShader->uniform("uTex", 0);
         gl::drawSolidRect(Rectf(vec2(0.0),size));
     }
     
@@ -422,38 +415,31 @@ namespace ds {
     {
         gl::ScopedTextureBind tex0(mPressureBuffer->getTexture());
         gl::ScopedGlslProg shader(visualizeShader);
-        visualizeShader->uniform("Sampler", 0);
+        visualizeShader->uniform("uTex", 0);
         gl::drawSolidRect(Rectf(vec2(0.0),size));
     }
     
     void Fluido::drawObstacles(vec2 size)
     {
         gl::ScopedTextureBind tex0(mVelocityBuffer->getTexture());
-        
         gl::ScopedGlslProg shader(velVisualizerShader);
-        velVisualizerShader->uniform("Sampler", 0);
-        
+        velVisualizerShader->uniform("uTex", 0);
         gl::drawSolidRect(Rectf(vec2(0.0),size));
- 
     }
     
     void Fluido::drawDensity(Rectf bounds)
     {
         gl::ScopedTextureBind tex0(mDensityBuffr->getTexture());
-        
         gl::ScopedGlslProg shader(visualizeShader);
         visualizeShader->uniform("uTex", 0);
-        
         gl::drawSolidRect(bounds);
     }
     
     void Fluido::drawVelocity(Rectf bounds)
     {
         gl::ScopedTextureBind tex0(mVelocityBuffer->getTexture());
-        
         gl::ScopedGlslProg shader(velVisualizerShader);
-        velVisualizerShader->uniform("Sampler", 0);
-        
+        velVisualizerShader->uniform("uTex", 0);
         gl::drawSolidRect(bounds);
     }
     
@@ -461,7 +447,7 @@ namespace ds {
     {
         gl::ScopedTextureBind tex0(mTemperatureBuffer->getTexture());
         gl::ScopedGlslProg shader(visualizeShader);
-        visualizeShader->uniform("Sampler", 0);
+        visualizeShader->uniform("uTex", 0);
         gl::drawSolidRect(bounds);
     }
     
@@ -469,7 +455,7 @@ namespace ds {
     {
         gl::ScopedTextureBind tex0(mPressureBuffer->getTexture());
         gl::ScopedGlslProg shader(visualizeShader);
-        visualizeShader->uniform("Sampler", 0);
+        visualizeShader->uniform("uTex", 0);
         gl::drawSolidRect(bounds);
     }
     
@@ -477,7 +463,7 @@ namespace ds {
     {
         gl::ScopedTextureBind tex0(mObstaclesFbo->getColorTexture());
         gl::ScopedGlslProg shader(visualizeShader);
-        visualizeShader->uniform("Sampler", 0);
+        visualizeShader->uniform("uTex", 0);
         gl::drawSolidRect(bounds);
     }
 }

@@ -21,6 +21,16 @@
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		BF1A68A21C2239990059E7D3 /* gpGpuFrameBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BF1A68A01C2239990059E7D3 /* gpGpuFrameBuffer.cpp */; };
 		BF75280E1C27FB5600BB40B5 /* Fluido.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BF75280D1C27FB5600BB40B5 /* Fluido.cpp */; };
+		BFD0DFC51C2CE12E000337AE /* black.png in Resources */ = {isa = PBXBuildFile; fileRef = BFD0DFBB1C2CE12E000337AE /* black.png */; };
+		BFD0DFC61C2CE12E000337AE /* f1.png in Resources */ = {isa = PBXBuildFile; fileRef = BFD0DFBC1C2CE12E000337AE /* f1.png */; };
+		BFD0DFC71C2CE12E000337AE /* Fluido in Resources */ = {isa = PBXBuildFile; fileRef = BFD0DFBD1C2CE12E000337AE /* Fluido */; };
+		BFD0DFC81C2CE12E000337AE /* round.png in Resources */ = {isa = PBXBuildFile; fileRef = BFD0DFBE1C2CE12E000337AE /* round.png */; };
+		BFD0DFC91C2CE12E000337AE /* tex0.png in Resources */ = {isa = PBXBuildFile; fileRef = BFD0DFBF1C2CE12E000337AE /* tex0.png */; };
+		BFD0DFCA1C2CE12E000337AE /* tex1.png in Resources */ = {isa = PBXBuildFile; fileRef = BFD0DFC01C2CE12E000337AE /* tex1.png */; };
+		BFD0DFCB1C2CE12E000337AE /* triangle.png in Resources */ = {isa = PBXBuildFile; fileRef = BFD0DFC11C2CE12E000337AE /* triangle.png */; };
+		BFD0DFCC1C2CE12E000337AE /* triangle.tif in Resources */ = {isa = PBXBuildFile; fileRef = BFD0DFC21C2CE12E000337AE /* triangle.tif */; };
+		BFD0DFCD1C2CE12E000337AE /* tround.jpg in Resources */ = {isa = PBXBuildFile; fileRef = BFD0DFC31C2CE12E000337AE /* tround.jpg */; };
+		BFD0DFCE1C2CE12E000337AE /* tround.png in Resources */ = {isa = PBXBuildFile; fileRef = BFD0DFC41C2CE12E000337AE /* tround.png */; };
 		E522DB6331C142CBB07D0A0E /* FluidoApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05911502F083474FA2B5F481 /* FluidoApp.cpp */; };
 /* End PBXBuildFile section */
 
@@ -45,6 +55,16 @@
 		BF1A68A11C2239990059E7D3 /* gpGpuFrameBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gpGpuFrameBuffer.h; sourceTree = "<group>"; };
 		BF75280C1C27FB3500BB40B5 /* Fluido.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Fluido.h; sourceTree = "<group>"; };
 		BF75280D1C27FB5600BB40B5 /* Fluido.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Fluido.cpp; sourceTree = "<group>"; };
+		BFD0DFBB1C2CE12E000337AE /* black.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = black.png; sourceTree = "<group>"; };
+		BFD0DFBC1C2CE12E000337AE /* f1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = f1.png; sourceTree = "<group>"; };
+		BFD0DFBD1C2CE12E000337AE /* Fluido */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Fluido; sourceTree = "<group>"; };
+		BFD0DFBE1C2CE12E000337AE /* round.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = round.png; sourceTree = "<group>"; };
+		BFD0DFBF1C2CE12E000337AE /* tex0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tex0.png; sourceTree = "<group>"; };
+		BFD0DFC01C2CE12E000337AE /* tex1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tex1.png; sourceTree = "<group>"; };
+		BFD0DFC11C2CE12E000337AE /* triangle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = triangle.png; sourceTree = "<group>"; };
+		BFD0DFC21C2CE12E000337AE /* triangle.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = triangle.tif; sourceTree = "<group>"; };
+		BFD0DFC31C2CE12E000337AE /* tround.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = tround.jpg; sourceTree = "<group>"; };
+		BFD0DFC41C2CE12E000337AE /* tround.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tround.png; sourceTree = "<group>"; };
 		D06F59C75CC34452A672243A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D76DDACE37F842E184A0C44C /* Fluido_Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; path = Fluido_Prefix.pch; sourceTree = "<group>"; };
 		DD6F7FEDC58C4107A0F01229 /* Resources.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Resources.h; path = ../include/Resources.h; sourceTree = "<group>"; };
@@ -178,6 +198,16 @@
 		BF1A68A31C2239E10059E7D3 /* assets */ = {
 			isa = PBXGroup;
 			children = (
+				BFD0DFBB1C2CE12E000337AE /* black.png */,
+				BFD0DFBC1C2CE12E000337AE /* f1.png */,
+				BFD0DFBD1C2CE12E000337AE /* Fluido */,
+				BFD0DFBE1C2CE12E000337AE /* round.png */,
+				BFD0DFBF1C2CE12E000337AE /* tex0.png */,
+				BFD0DFC01C2CE12E000337AE /* tex1.png */,
+				BFD0DFC11C2CE12E000337AE /* triangle.png */,
+				BFD0DFC21C2CE12E000337AE /* triangle.tif */,
+				BFD0DFC31C2CE12E000337AE /* tround.jpg */,
+				BFD0DFC41C2CE12E000337AE /* tround.png */,
 			);
 			name = assets;
 			path = ../assets;
@@ -246,7 +276,17 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BFD0DFC61C2CE12E000337AE /* f1.png in Resources */,
+				BFD0DFCD1C2CE12E000337AE /* tround.jpg in Resources */,
+				BFD0DFC71C2CE12E000337AE /* Fluido in Resources */,
+				BFD0DFCA1C2CE12E000337AE /* tex1.png in Resources */,
+				BFD0DFC91C2CE12E000337AE /* tex0.png in Resources */,
+				BFD0DFC81C2CE12E000337AE /* round.png in Resources */,
+				BFD0DFCB1C2CE12E000337AE /* triangle.png in Resources */,
 				5708B1D7E1F5446483E97B5B /* CinderApp.icns in Resources */,
+				BFD0DFC51C2CE12E000337AE /* black.png in Resources */,
+				BFD0DFCC1C2CE12E000337AE /* triangle.tif in Resources */,
+				BFD0DFCE1C2CE12E000337AE /* tround.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

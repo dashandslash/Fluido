@@ -3,7 +3,7 @@
 
 #define M_PI 3.1415926535897932384626433832795
 
-uniform sampler2D Sampler;
+uniform sampler2D uTex;
 //uniform vec3 uColor;
 uniform vec2 Scale;
 
@@ -28,7 +28,7 @@ vec3 hsv2rgb(vec3 c) {
 
 void main()
 {
-    vec4 L = texture(Sampler, vec2(vTexCoord.x, 1.0-vTexCoord.y));
+    vec4 L = texture(uTex, vec2(vTexCoord.x, 1.0-vTexCoord.y));
     float angle = atan2(L.x, L.y);
     
     if(angle < 0.0f)
