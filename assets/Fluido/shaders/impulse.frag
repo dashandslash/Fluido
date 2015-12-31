@@ -12,12 +12,11 @@ void main()
     FragColor = vec4(uColor);
     if (d < uRadius) {
         float a = max((uRadius - d) / uRadius, 0.0);
-        a = min(a, 1.0);
+//        a = min(a, 1.0);
         FragColor += vec4(uColor);
-        FragColor.a = pow(a, 3.0);
+        FragColor.a = pow(a, 2.0);
     } else {
         FragColor = vec4(0);
     }
-
 }
 

@@ -32,7 +32,12 @@ void main()
     if (oS.x > 0) pS = pC;
     if (oE.x > 0) pE = pC;
     if (oW.x > 0) pW = pC;
-    
+//
+//    pN *= 1.0-ceil(oN.x);
+//    pS *= 1.0-ceil(oS.x);
+//    pE *= 1.0-ceil(oE.x);
+//    pW *= 1.0-ceil(oW.x);
+//
     vec4 bC = texelFetch(uDivergenceTex, T, 0);
     FragColor = (pW + pE + pS + pN + uAlpha * bC) * uInverseBeta;
 }

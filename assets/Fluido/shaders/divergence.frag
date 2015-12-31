@@ -28,6 +28,12 @@ void main()
     if (oS.x > 0) vS = oS.yz;
     if (oE.x > 0) vE = oE.yz;
     if (oW.x > 0) vW = oW.yz;
+
+    
+//    vN *= 1.0-ceil(oN.x);
+//    vS *= 1.0-ceil(oS.x);
+//    vE *= 1.0-ceil(oE.x);
+//    vW *= 1.0-ceil(oW.x);
     
     FragColor = uHalfInverseCellSize * (vE.x - vW.x + vN.y - vS.y);
     

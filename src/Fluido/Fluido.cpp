@@ -23,7 +23,8 @@ namespace ds {
     
     Fluido::Fluido(ivec2 size):mSize(size)
     {
-        
+        mImpulseColorNew = false;
+        mImpulseVelocityNew = false;
         mPrevTime = getElapsedSeconds();
         mDissipation = 0.995;
         mTimeStep = 1.0;
@@ -34,6 +35,12 @@ namespace ds {
         mCellSize = 1.25f;
         mNumIterations = 40;
         mGravity = vec3(0.0);
+        mGradientScale = 1.125f;
+        mVorticityForce = 0.0f;
+        mMaxDensity = 0.0f;
+        mMaxTemperature = 0.0f;
+        mMaxVelocity = 0.0f;
+        mClampingForce = 0.5f;
         
         initBuffers();
         
@@ -53,6 +60,8 @@ namespace ds {
         mParamRef->removeParam("Cell Size");
         mParamRef->removeParam("Num Jacobi Iterations");
         mParamRef->removeParam("Gravity X Y");
+        mParamRef->removeParam("Gradient Scale");
+        mParamRef->removeParam("Vorticity Force");
         
         mImpulsePoints->cancel();
     }
@@ -60,9 +69,9 @@ namespace ds {
     void Fluido::initBuffers()
     {
         mVelocityBuffer = gpGpuFrameBuffer::create(mSize, GL_RG32F);
-        mDensityBuffr = gpGpuFrameBuffer::create(mSize, GL_RGB32F);
+        mDensityBuffr = gpGpuFrameBuffer::create(mSize, GL_RGBA32F);
         mPressureBuffer = gpGpuFrameBuffer::create(mSize, GL_R32F);
-        mTemperatureBuffer = gpGpuFrameBuffer::create(mSize, GL_RGB32F);
+        mTemperatureBuffer = gpGpuFrameBuffer::create(mSize, GL_RGBA32F);
         
         gl::Texture::Format TextureFormat;
         TextureFormat.setMagFilter( GL_LINEAR );
@@ -74,6 +83,8 @@ namespace ds {
         
         format.setColorTextureFormat(TextureFormat);
         
+        mVorticitySecondPassFbo = gl::Fbo::create(mSize.x, mSize.y, format);
+        mVorticityFirstPassFbo = gl::Fbo::create(mSize.x, mSize.y, format);
         mDivergenceFbo = gl::Fbo::create(mSize.x, mSize.y, format);
         mHiResObstaclesFbo = gl::Fbo::create(mSize.x, mSize.y, format);
         mObstaclesFbo = gl::Fbo::create(mSize.x, mSize.y, format);
@@ -129,6 +140,21 @@ namespace ds {
                                                              .fragment( loadAsset("Fluido/shaders/visualize.frag") ));
             velVisualizerShader = gl::GlslProg::create(gl::GlslProg::Format().vertex(loadAsset("Fluido/shaders/passThru.vert")).fragment(loadAsset("Fluido/shaders/visualizeVelocity.frag")));
             
+            mImpulseTextureShader = gl::GlslProg::GlslProg::create(gl::GlslProg::Format().vertex(loadAsset("Fluido/shaders/passThru.vert"))
+                                                                   .fragment( loadAsset("Fluido/shaders/impulseTexture.frag") ));
+            
+            vorticityFirstShader = gl::GlslProg::GlslProg::create(gl::GlslProg::Format().vertex(loadAsset("Fluido/shaders/passThru.vert"))
+                                                                  .fragment( loadAsset("Fluido/shaders/vorticityFirst.frag") ));
+            
+            vorticitySecondShader = gl::GlslProg::GlslProg::create(gl::GlslProg::Format().vertex(loadAsset("Fluido/shaders/passThru.vert"))
+                                                                  .fragment( loadAsset("Fluido/shaders/vorticitySecond.frag") ));
+            
+            addForceShader = gl::GlslProg::GlslProg::create(gl::GlslProg::Format().vertex(loadAsset("Fluido/shaders/passThru.vert"))
+                                                            .fragment( loadAsset("Fluido/shaders/addTexture.frag") ));
+            
+            clampTextureShader = gl::GlslProg::GlslProg::create(gl::GlslProg::Format().vertex(loadAsset("Fluido/shaders/passThru.vert"))
+                                                                .fragment( loadAsset("Fluido/shaders/clampTexture.frag") ));
+            
         } catch ( gl::GlslProgCompileExc ex ) {
             console() << "GLSL Error: " << ex.what() << endl;
             
@@ -159,6 +185,12 @@ namespace ds {
         mParamRef->addParam("Cell Size", &mCellSize, "step=0.001 min=0.0");
         mParamRef->addParam("Num Jacobi Iterations", &mNumIterations, "step=1 min=0 max=300");
         mParamRef->addParam("Gravity X Y", &mGravity);
+        mParamRef->addParam("Gradient Scale", &mGradientScale, "step=0.01");
+        mParamRef->addParam("Vorticity Force", &mVorticityForce, "step=0.1 max=200.0 min=0.0 ");
+        mParamRef->addParam("Max Velocity", &mMaxVelocity, "step=0.1 max=200.0 min=0.0 ");
+        mParamRef->addParam("Max Density", &mMaxDensity, "step=0.1 max=200.0 min=0.0 ");
+        mParamRef->addParam("Max Temperature", &mMaxTemperature, "step=0.1 max=200.0 min=0.0 ");
+        mParamRef->addParam("Clamping Force", &mClampingForce, "step=0.05 max=200.0 min=0.0 ");
         
     }
     
@@ -180,6 +212,24 @@ namespace ds {
         
         mPrevTime = currTime;
         
+        if (mMaxVelocity>0.0) {
+            clampTexture(mVelocityBuffer, mMaxVelocity, mClampingForce);
+        }
+        if (mMaxDensity>0.0) {
+            clampTexture(mDensityBuffr, mMaxDensity, mClampingForce);
+        }
+        if (mMaxTemperature>0.0) {
+            clampTexture(mTemperatureBuffer, mMaxTemperature, mClampingForce);
+        }
+
+        if (mVorticityForce>0.0f) {
+            vorticityFirst(mVorticityFirstPassFbo, mVelocityBuffer->getTexture(), mObstaclesFbo->getColorTexture());
+            
+            vorticitySecond(mVorticitySecondPassFbo, mVorticityFirstPassFbo->getColorTexture(), mDeltaT, 1.0, mCellSize);
+            
+            addForce(mVelocityBuffer,mVorticitySecondPassFbo->getColorTexture(),mVorticityForce);
+        }
+        
         Advect(mVelocityBuffer, mVelocityBuffer->getTexture(), mObstaclesFbo->getColorTexture(), mDissipation, mDeltaT);
         
         Advect(mTemperatureBuffer, mVelocityBuffer->getTexture(), mObstaclesFbo->getColorTexture(), mDissipation, mDeltaT);
@@ -192,11 +242,15 @@ namespace ds {
             impulsePoint p;
             mImpulsePoints->tryPopBack(&p);
             
-            injectImpulse(mTemperatureBuffer->getBuffer(), p.position, p.radius, p.color);
+            if(p.addDens){
+                injectImpulse(mTemperatureBuffer->getBuffer(), p.position, p.radius, p.color);
+            }
             
-            injectImpulse(mDensityBuffr->getBuffer(), p.position, p.radius, p.color);
+            if (p.addTemp) {
+                injectImpulse(mDensityBuffr->getBuffer(), p.position, p.radius, p.color);
+            }
             
-            if (p.magnitude>0.0)
+            if (p.magnitude>0.0 && p.addVel)
             {
                 injectImpulse(mVelocityBuffer->getBuffer(), p.position, p.radius, vec4(p.direction,1.0,1.0));
             }
@@ -213,6 +267,16 @@ namespace ds {
             }
         }
         
+        if (mImpulseColorNew) {
+            injectTexture(mTemperatureBuffer, mImpulseColorTex);
+            injectTexture(mDensityBuffr, mImpulseColorTex);
+            mImpulseColorNew = false;
+        }
+        if (mImpulseVelocityNew) {
+            injectTexture(mVelocityBuffer, mImpulseVelocityTex);
+            mImpulseVelocityNew = false;
+        }
+        
         ComputeDivergence(mDivergenceFbo, mVelocityBuffer->getTexture(), mObstaclesFbo->getColorTexture(), mCellSize);
         
         clear(mPressureBuffer->getBuffer());
@@ -222,6 +286,92 @@ namespace ds {
         }
         
         subtractGradient(mVelocityBuffer, mPressureBuffer->getTexture(), mObstaclesFbo->getColorTexture(), mCellSize);
+    }
+    
+    void Fluido::clampTexture(const gpGpuFrameBufferRef &buffer, float maxValue, float clampingForce)
+    {
+        gl::ScopedFramebuffer fbo( buffer->getBuffer() );
+        gl::ScopedViewport viewPort(buffer->getSize());
+        gl::setMatricesWindow(buffer->getSize());
+        buffer->drawBuffer();
+        
+        gl::ScopedTextureBind tex0( buffer->getTexture(), 0 );
+        
+        gl::ScopedGlslProg shader(clampTextureShader);
+        
+        clampTextureShader->uniform("uTexture", 0);
+        
+        clampTextureShader->uniform("uMaxValue", maxValue);
+        
+        clampTextureShader->uniform("uClampForce", clampingForce);
+        
+        gl::drawSolidRect(Rectf(0.0,0.0,mSize.x,mSize.y));
+        
+        buffer->swap();
+    }
+    
+    void Fluido::addForce(const gpGpuFrameBufferRef &buffer, const gl::TextureRef &texture, float force)
+    {
+        
+        gl::ScopedFramebuffer fbo( buffer->getBuffer() );
+        gl::ScopedViewport viewPort(buffer->getSize());
+        gl::setMatricesWindow(buffer->getSize());
+        buffer->drawBuffer();
+        
+        gl::ScopedTextureBind tex0( buffer->getTexture(), 0 );
+        gl::ScopedTextureBind tex1( texture, 1 );
+        
+        gl::ScopedGlslProg shader(addForceShader);
+        
+        addForceShader->uniform("uBackbuffer", 0);
+        
+        addForceShader->uniform("uAddTexture", 1);
+        
+        addForceShader->uniform("uForce", force);
+        
+        gl::drawSolidRect(Rectf(0.0,0.0,mSize.x,mSize.y));
+        
+        buffer->swap();
+    }
+    
+    void Fluido::vorticityFirst(const gl::FboRef &buffer, const gl::TextureRef& velocityTexture, const gl::TextureRef& obstaclesTexture){
+        
+        gl::ScopedFramebuffer fbo( buffer );
+        gl::ScopedViewport viewPort(buffer->getSize());
+        gl::setMatricesWindow(buffer->getSize());
+        
+        gl::ScopedTextureBind tex1( velocityTexture, 0 );
+        gl::ScopedTextureBind tex2( obstaclesTexture, 1 );
+        
+        gl::ScopedGlslProg shader(vorticityFirstShader);
+        
+        vorticityFirstShader->uniform("uVelocity", 0);
+        vorticityFirstShader->uniform("uObstacle", 1);
+        
+        gl::drawSolidRect(Rectf(0.0,0.0,mSize.x,mSize.y));
+        
+    }
+    
+    void Fluido::vorticitySecond(const gl::FboRef &buffer, const gl::TextureRef& vorticityTexture, float deltaT, float scale, float cellSize)
+    {
+        
+        gl::ScopedFramebuffer fbo( buffer );
+        gl::ScopedViewport viewPort(buffer->getSize());
+        gl::setMatricesWindow(buffer->getSize());
+        
+        gl::ScopedTextureBind tex0( vorticityTexture, 0 );
+        
+        gl::ScopedGlslProg shader(vorticitySecondShader);
+        
+        vorticitySecondShader->uniform("uVorticity", 0);
+        
+        vorticitySecondShader->uniform("uHalfInverseCellSize", float(0.5f / cellSize));
+        
+        vorticitySecondShader->uniform("uDeltaT", deltaT);
+        vorticitySecondShader->uniform("uConfinementScale", 1.0f);
+        
+        gl::drawSolidRect(Rectf(0.0,0.0,mSize.x,mSize.y));
+        
     }
     
     void Fluido::Advect(const gpGpuFrameBufferRef &buffer, const gl::TextureRef &velocity, const gl::TextureRef &obstacles, float dissipation, float timeStep)
@@ -344,7 +494,7 @@ namespace ds {
         
         subGradientShader->uniform("uObstacles", 2);
         
-        subGradientShader->uniform("uGradientScale", 1.125f/cellSize );
+        subGradientShader->uniform("uGradientScale", mGradientScale/cellSize );
         
         gl::color(Color::white());
         gl::drawSolidRect(Rectf(vec2(0.0,0.0), buffer->getSize()));
@@ -365,11 +515,49 @@ namespace ds {
         impulseShader->uniform("uPoint", position*vec2(mSize));
         impulseShader->uniform("uRadius", radius);
         impulseShader->uniform("uColor", color);
-        
         gl::color(Color::white());
         
         gl::drawSolidRect(Rectf(vec2(0.0,0.0), destFbo->getSize()));
         
+    }
+    
+    void Fluido::injectTexture(const gpGpuFrameBufferRef &buffer, const gl::TextureRef &texture)
+    {
+        
+//        gl::ScopedBlendAdditive alpha;
+        gl::ScopedFramebuffer   fbo(buffer->getBuffer());
+        gl::viewport(buffer->getSize());
+        gl::setMatricesWindow(buffer->getSize());
+        
+        gl::ScopedGlslProg prog(mImpulseTextureShader);
+        
+        gl::ScopedTextureBind tex0(buffer->getTexture(),0);
+        gl::ScopedTextureBind tex1(texture,1);
+        
+        mImpulseTextureShader->uniform("uTexture", 0);
+        mImpulseTextureShader->uniform("uImpulseTex", 1);
+        
+        gl::color(Color::white());
+        
+        gl::drawSolidRect(Rectf(vec2(0.0,0.0), buffer->getSize()));
+        
+//        gl::draw(texture,Rectf(vec2(0.0,0.0), buffer->getSize()));
+
+    }
+    
+    
+    void Fluido::addImpulseTexture(const gl::TextureRef &colorTexture)
+    {
+        mImpulseColorNew = true;
+        mImpulseColorTex = colorTexture;
+    }
+    
+    void Fluido::addImpulseTexture(const gl::TextureRef &colorTexture, const gl::TextureRef &velocityTexture)
+    {
+        mImpulseColorNew = true;
+        mImpulseVelocityNew = true;
+        mImpulseColorTex = colorTexture;
+        mImpulseVelocityTex = velocityTexture;
     }
     
     ivec2 Fluido::getSize()
@@ -389,42 +577,27 @@ namespace ds {
     
     void Fluido::drawDensity(vec2 size)
     {
-        gl::ScopedTextureBind tex0(mDensityBuffr->getTexture());
-        gl::ScopedGlslProg shader(visualizeShader);
-        visualizeShader->uniform("uTex", 0);
-        gl::drawSolidRect(Rectf(vec2(0.0),size));
+        drawDensity(Rectf(vec2(0.0f), size));
     }
     
     void Fluido::drawVelocity(vec2 size)
     {
-        gl::ScopedTextureBind tex0(mVelocityBuffer->getTexture());
-        gl::ScopedGlslProg shader(velVisualizerShader);
-        velVisualizerShader->uniform("uTex", 0);
-        gl::drawSolidRect(Rectf(vec2(0.0),size));
+        drawVelocity(Rectf(vec2(0.0f), size));
     }
     
     void Fluido::drawTemperature(vec2 size)
     {
-        gl::ScopedTextureBind tex0(mTemperatureBuffer->getTexture());
-        gl::ScopedGlslProg shader(visualizeShader);
-        visualizeShader->uniform("uTex", 0);
-        gl::drawSolidRect(Rectf(vec2(0.0),size));
+        drawTemperature(Rectf(vec2(0.0f), size));
     }
     
     void Fluido::drawPressure(vec2 size)
     {
-        gl::ScopedTextureBind tex0(mPressureBuffer->getTexture());
-        gl::ScopedGlslProg shader(visualizeShader);
-        visualizeShader->uniform("uTex", 0);
-        gl::drawSolidRect(Rectf(vec2(0.0),size));
+        drawPressure(Rectf(vec2(0.0f), size));
     }
     
     void Fluido::drawObstacles(vec2 size)
     {
-        gl::ScopedTextureBind tex0(mVelocityBuffer->getTexture());
-        gl::ScopedGlslProg shader(velVisualizerShader);
-        velVisualizerShader->uniform("uTex", 0);
-        gl::drawSolidRect(Rectf(vec2(0.0),size));
+        drawObstacles(Rectf(vec2(0.0f), size));
     }
     
     void Fluido::drawDensity(Rectf bounds)

@@ -7,6 +7,8 @@
 #include "cinder/Utilities.h"
 #include "cinder/params/Params.h"
 
+#include "cinder/Capture.h"
+
 #include "Fluido.h"
 
 using namespace ci;
@@ -23,7 +25,7 @@ class FluidoApp : public App {
     void mouseUp( MouseEvent event ) override;
     void keyDown( KeyEvent event ) override;
     void keyUp( KeyEvent event ) override;
-    
+
     void init();
     
 	void update() override;
@@ -39,7 +41,7 @@ class FluidoApp : public App {
     
     FluidoRef       mFluido;
     
-    gl::TextureRef     mTex;
+    gl::TextureRef     mTex, mTex1;
     
     ColorA             mColor;
     float              mRadius;
@@ -53,6 +55,12 @@ class FluidoApp : public App {
     int                 mDrawingMode;
     
     bool                mDrawObstacles;
+    
+    gl::FboRef          mImpulseVelocityTex;
+    gl::FboRef          mImpulseColorTex;
+    
+    CaptureRef          mCapture;
+    gl::TextureRef      mCaptureTex;
 };
 
 void FluidoApp::setup()
@@ -66,7 +74,50 @@ void FluidoApp::setup()
     mRadius = 10.0f;
     mFluidoSize = ivec2(512,512);
     
+    gl::Texture::Format TextureFormat;
+    TextureFormat.setMagFilter( GL_LINEAR );
+    TextureFormat.setMinFilter( GL_LINEAR );
+    TextureFormat.setWrap(GL_REPEAT, GL_REPEAT);
+    TextureFormat.setInternalFormat( GL_RGBA32F );
+    
+    gl::Fbo::Format format;
+    
+    format.setColorTextureFormat(TextureFormat);
+    
+    mImpulseColorTex = gl::Fbo::create(mFluidoSize.x, mFluidoSize.y, format);
+    mImpulseVelocityTex = gl::Fbo::create(mFluidoSize.x, mFluidoSize.y, format);
+    
+    try {
+        mCapture = Capture::create( 640, 480 );
+        mCapture->start();
+    }
+    catch( ci::Exception &exc ) {
+        console()<< "Failed to init capture " << endl;;
+    }
+    
+    {
+        gl::ScopedFramebuffer fbo(mImpulseVelocityTex);
+        gl::clear(ColorA(0.0,0.0,0.0,0.0));
+        gl::ScopedViewport viewport(mFluidoSize);
+        gl::setMatricesWindow(mFluidoSize);
+        gl::color(-3.0, 0.0, 0.0);
+        gl::drawSolidRect(Rectf(100.0f,50.0f,150.0f,150));
+        
+        
+    }
+    {
+        gl::ScopedFramebuffer fbo(mImpulseColorTex);
+        gl::clear(ColorA(0.0,0.0,0.0,0.0));
+        gl::ScopedViewport viewport(mFluidoSize);
+        gl::setMatricesWindow(mFluidoSize);
+        gl::color(1.0, 1.0, 1.0);
+        gl::drawSolidRect(Rectf(100.0f,50.0f,150.0f,150));
+        
+        
+    }
+    
     mTex = gl::Texture::create(loadImage(loadAsset("triangle.png")));
+    mTex1 = gl::Texture::create(loadImage(loadAsset("tex1.png")));
     mParams = params::InterfaceGl::create("Fluido", ivec2(300,400));
     
     mFpsString = toString(getAverageFps());
@@ -111,7 +162,7 @@ void FluidoApp::init()
     
     mFluido->registerParams(mParams);
     
-    mFluido->addObstacle(mTex);
+//    mFluido->addObstacle(mTex);
 }
 
 void FluidoApp::mouseDown( MouseEvent event )
@@ -122,7 +173,7 @@ void FluidoApp::mouseDown( MouseEvent event )
     
     if (isCtrlDown) {
         //Mouse Position has to be normalized from 0 to 1
-        mFluido->addConstantImpulsePoint({mMousePos,mMouseDir,length(mMouseDir), mColor,mRadius,100.0f });
+        mFluido->addConstantImpulsePoint({mMousePos,mMouseDir,length(mMouseDir), mColor,mRadius,100.0f, true, true, true });
     }
 }
 
@@ -141,7 +192,6 @@ void FluidoApp::mouseMove( MouseEvent event )
     mMouseDir = vec2( normalizezPos - mMousePos );
     mMouseDir *= mForce;
     mMousePos = normalizezPos;
-    
 }
 
 void FluidoApp::mouseUp( MouseEvent event )
@@ -150,9 +200,44 @@ void FluidoApp::mouseUp( MouseEvent event )
     mMouseDown = false;
 }
 
-
 void FluidoApp::update()
 {
+    
+//    if (mCapture->checkNewFrame())
+    {
+        
+        if( mCapture && mCapture->checkNewFrame() ) {
+            if( ! mCaptureTex ) {
+                // Capture images come back as top-down, and it's more efficient to keep them that way
+                mCaptureTex = gl::Texture::create( *mCapture->getSurface(), gl::Texture::Format().loadTopDown() );
+            }
+            else {
+                mCaptureTex->update( *mCapture->getSurface() );
+
+            }
+            
+        }
+        {
+            gl::ScopedFramebuffer fbo(mImpulseVelocityTex);
+            gl::clear(ColorA(0.0,0.0,0.0,0.0));
+            gl::ScopedViewport viewport(mFluidoSize);
+            gl::setMatricesWindow(mFluidoSize);
+            gl::color(0.0, 0.0, 0.0);
+            gl::draw(mCaptureTex,Rectf(vec2(0.0,mFluidoSize.y),vec2(mFluidoSize.x,0.0)));
+            //            cam =  ( mCapture->getSurface() );
+        }
+        {
+            gl::ScopedFramebuffer fbo(mImpulseColorTex);
+            gl::clear(ColorA(0.0,0.0,0.0,0.0));
+            gl::ScopedViewport viewport(mFluidoSize);
+            gl::setMatricesWindow(mFluidoSize);
+            gl::color(1.0, 1.0, 1.0,1.0);
+            gl::draw(mCaptureTex,Rectf(vec2(mFluidoSize),vec2(0.0,0.0)));
+            
+        }
+        
+    }
+//    mFluido->addImpulseTexture(mImpulseColorTex->getColorTexture());//, mImpulseVelocityTex->getColorTexture());
 
     float deltaT = (getElapsedSeconds() - mPrevTime);
     mPrevTime = getElapsedSeconds();
@@ -164,7 +249,7 @@ void FluidoApp::update()
     
     if (mMouseDown) {
         //Mouse Position has to be normalized from 0 to 1
-        impulsePoint p {mMousePos,mMouseDir,length(mMouseDir), mColor,mRadius,100.0f };
+        impulsePoint p {mMousePos,mMouseDir,length(mMouseDir), mColor,mRadius,100.0f, true, true, true };
         mFluido->addImpulsePoint(p);
     }
 }
@@ -177,6 +262,10 @@ void FluidoApp::keyDown(KeyEvent event)
             break;
         case KeyEvent::KEY_LCTRL:
             isCtrlDown = true;
+            break;
+        case KeyEvent::KEY_z:
+//            mFluido->addImpulseTexture(mImpulseColorTex->getColorTexture(), mImpulseVelocityTex->getColorTexture());
+            mFluido->addImpulseTexture(mImpulseColorTex->getColorTexture());//, mImpulseVelocityTex->getColorTexture());
             break;
         default:
             break;
@@ -199,7 +288,7 @@ void FluidoApp::draw()
     gl::clear(ColorA(0.0,0.0,0.0,0.0));
     gl::viewport(getWindowSize());
     gl::setMatricesWindow(getWindowSize());
-    
+    gl::ScopedBlendAdditive blend;
 
     switch (mDrawingMode) {
         case 0:
@@ -223,10 +312,6 @@ void FluidoApp::draw()
         
     }
     
-    
-//    mFluido->drawObstacles(getWindowBounds());
-//    gl::draw(mTex,getWindowBounds());
-    
     if (isCtrlDown) {
         gl::color(mColor);
         const float scaledRadius = mRadius*(float(getWindowSize().x)/float(mFluidoSize.x));
@@ -234,11 +319,16 @@ void FluidoApp::draw()
         gl::drawStrokedCircle(mMousePos*vec2(getWindowSize()), scaledRadius);
     }
     
-    mParams->draw();
+
+    gl::color(1.0, 1.0, 1.0,1.0);
+//    gl::draw(mCaptureTex, Rectf(vec2(getWindowWidth(),0.0), vec2(0.0,getWindowHeight())));
     
+    mParams->draw();
+
 }
 
 CINDER_APP( FluidoApp, RendererGl, [&](App::Settings *settings) {
     settings->setFullScreen(true);
     settings->setFrameRate(60);
+    settings->setMultiTouchEnabled();
 })

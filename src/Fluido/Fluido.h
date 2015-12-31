@@ -24,7 +24,6 @@ namespace ds {
     typedef shared_ptr<class Fluido> FluidoRef;
     
     struct impulsePoint {
-        
         vec2    position;
         vec2    direction;
         float   magnitude;
@@ -33,6 +32,9 @@ namespace ds {
         float   radius;
         float   force;
         
+        bool addDens;
+        bool addTemp;
+        bool addVel;
     };
 
     class Fluido{
@@ -59,8 +61,12 @@ namespace ds {
         void addImpulsePoint(impulsePoint point);
         //! Draw a circle every frame into the Density and Temperature buffer, if magnetude > 0 draw also into the velocity texture with the corresponding direction value.
         void addConstantImpulsePoint(impulsePoint point);
-        
+        //! Add obstacle texure (Need just RED channel)
         void addObstacle(const gl::TextureRef &obstacle);
+        //! Add Impulse Color, will be added to Density and Temperature buffer without any velocity
+        void addImpulseTexture(const gl::TextureRef &colorTexture);
+        //! Add Impulse Color, will be added to Density and Temperature buffer and add Velocity Texture to be applied to the Velocity BUffer
+        void addImpulseTexture(const gl::TextureRef &colorTexture, const gl::TextureRef &velocityTexture);
         
         ivec2 getSize();
         
@@ -102,8 +108,16 @@ namespace ds {
         
         void subtractGradient(const gpGpuFrameBufferRef &buffer, const gl::TextureRef &pressure, const gl::TextureRef &obstacles, float gradientScale);
         
+        void vorticityFirst(const gl::FboRef &buffer, const gl::TextureRef& velocityTexture, const gl::TextureRef& obstaclesTexture);
+        
+        void vorticitySecond(const gl::FboRef &buffer, const gl::TextureRef& vorticityTexture, float deltaT, float scale, float cellSize);
+        
+        void addForce(const gpGpuFrameBufferRef &buffer, const gl::TextureRef &texture, float force);
+        void clampTexture(const gpGpuFrameBufferRef &buffer, float maxValue, float clampingForce);
+        
         void injectImpulse(const gl::FboRef &fbo, vec2 position, float radius, vec4 color);
-
+        void injectTexture(const gpGpuFrameBufferRef &buffer, const gl::TextureRef &texture);
+        
         ivec2               mSize;
         
         gl::GlslProgRef     jacobiShader,
@@ -113,7 +127,11 @@ namespace ds {
                             subGradientShader,
                             impulseShader,
                             visualizeShader,
-                            velVisualizerShader;
+                            velVisualizerShader,
+                            vorticityFirstShader,
+                            vorticitySecondShader,
+                            addForceShader,
+                            clampTextureShader;
         
         
         gpGpuFrameBufferRef mVelocityBuffer,
@@ -123,7 +141,9 @@ namespace ds {
         
         gl::FboRef          mDivergenceFbo,
                             mObstaclesFbo,
-                            mHiResObstaclesFbo;
+                            mHiResObstaclesFbo,
+                            mVorticityFirstPassFbo,
+                            mVorticitySecondPassFbo;
         
         gl::FboRef          mFbo;
         
@@ -133,7 +153,13 @@ namespace ds {
                             mKappa,
                             mAmbientTemp,
                             mInversBeta,
-                            mCellSize;
+                            mCellSize,
+                            mGradientScale,
+                            mVorticityForce,
+                            mClampingForce,
+                            mMaxVelocity,
+                            mMaxDensity,
+                            mMaxTemperature;
         
         int                 mNumIterations;
         
@@ -147,6 +173,12 @@ namespace ds {
         vector<impulsePoint>	mConstantImpulsePoints;
         
         params::InterfaceGlRef  mParamRef;
+        
+        gl::GlslProgRef     mImpulseTextureShader;
+        gl::TextureRef      mImpulseColorTex;
+        gl::TextureRef      mImpulseVelocityTex;
+        bool                mImpulseColorNew;
+        bool                mImpulseVelocityNew;
     };
 }
 #endif /* Fluido_h */
